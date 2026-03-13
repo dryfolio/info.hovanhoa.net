@@ -1,0 +1,15 @@
+---
+description: Core conventions for info.hovanhoa.net
+alwaysApply: true
+---
+
+# Project Conventions
+
+- Prefer clean, minimal configuration and documentation.
+- Use the GitHub repo `dryfolio/info.hovanhoa.net` as the canonical remote.
+- Keep README focused on this project (no template-origin references).
+- Do not include donation or sponsor badges unless they are explicitly for `dryfolio` or `hovanhoa`.
+- When adding new pages or sections, keep the visual style consistent with the existing design (colors, typography, spacing).
+- Prefer small, focused React components under `components/` over large monoliths.
+- Keep link/bio data in dedicated data/config files (not hardcoded throughout components) so it can be easily updated.
+- When copying code from external templates, remove branding/content that is not specific to `info.hovanhoa.net`.
