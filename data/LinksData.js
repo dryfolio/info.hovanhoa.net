@@ -66,6 +66,13 @@ const webLinks = [
         icon: '/gallery.svg',
         on: true
     },
+    {
+        title: 'Music',
+        url: 'https://music.hovanhoa.net',
+        type: 'checkout',
+        icon: '/music.svg',
+        on: true
+    },
 
     // {
     //     title: 'Buy Me a Coffee',
