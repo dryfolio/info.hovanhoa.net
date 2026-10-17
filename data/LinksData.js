@@ -44,10 +44,17 @@ const webLinks = [
         on: true
     },
     // checkout section
-    
+
+    {
+        title: 'Home',
+        url: 'https://hovanhoa.net',
+        type: 'checkout',
+        icon: '/home.svg',
+        on: true
+    },
     {
         title: 'Blog',
-        url: 'https://hovanhoa.net',
+        url: 'https://blog.hovanhoa.net',
         type: 'checkout',
         icon: '/blog.svg',
         on: true
@@ -78,6 +85,13 @@ const webLinks = [
         url: 'https://book.hovanhoa.net',
         type: 'checkout',
         icon: '/doc.png',
+        on: true
+    },
+    {
+        title: 'Status',
+        url: 'https://status.hovanhoa.net',
+        type: 'checkout',
+        icon: '/status.svg',
         on: true
     },
 
