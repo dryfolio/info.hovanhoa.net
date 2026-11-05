@@ -1,102 +1,71 @@
 import { createGlobalStyle } from "styled-components";
 
+// Same editorial tokens as the rest of the hovanhoa.net family. Dark mode
+// follows the shared `theme` cookie (see the boot script in _document.js).
 const GlobalStyle = createGlobalStyle`
-body.dark-mode {
-  --img: invert(1);
-  --avatar-shadow: rgba(28,22,47,.3);
+:root {
+  --bg: #f7f7f5;
+  --surface: #ffffff;
+  --surface-2: #f3f3f0;
+  --border: #e4e4e0;
+  --border-2: #d4d4cf;
+  --text: #0c0c0c;
+  --text-2: #5c5b56;
+  --text-3: #8a8983;
+  --accent: #d8602f;
+  --accent-ink: #b54a1f;
+  --font-sans: 'Geist', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, monospace;
+  --font-display: 'Libertinus Serif', 'Noto Serif', Georgia, serif;
+  color-scheme: light;
 }
 
-body.light-mode {
-  --img: invert(0);
-  --avatar-shadow: rgba(48,52,77,.1);
-} 
+html.dark {
+  --bg: #0a0a0a;
+  --surface: #141414;
+  --surface-2: #1a1a1a;
+  --border: #222222;
+  --border-2: #2e2e2e;
+  --text: #f5f5f4;
+  --text-2: #a1a1aa;
+  --text-3: #71717a;
+  --accent: #f0743f;
+  --accent-ink: #f59568;
+  color-scheme: dark;
+}
 
 * {
-  --bg-light-yellow: #F2F2EE;
-  --bg-light-blue: #EDF2FF;
-  --bg-light-red: #F2EEEE;
-  
-  --light-yellow: #FFF6C5;
-  --yellow: #F8C231;
-    
-  --light-red: #FFC5EC;
-  --red: #FF6969;
-  --pink: #ED81FF;
-  --light-pink: #FFE9FA;
-  
-  --blue: #00A3FF;
-  --light-blue: #B7F2FF;
-  
-  --white: #FFFFFF;
-  --white20: #ecedee;
-  --black: #11181C;
-  --light-gray: #858585;
-  --gray: #687076;
-  --light-black: rgba(0,0,0,.05);
-  --light-white: rgba(255,255,255,.03);
-  
   margin: 0;
   padding: 0;
   border: 0;
   list-style: none;
   text-decoration: none;
   box-sizing: border-box;
-  line-height: normal;
-  transition: all .1s ease;
-  
-  
+  transition: color .15s ease, background-color .15s ease, border-color .15s ease, transform .2s ease;
 }
 
-html{
-    scroll-behavior: smooth;
+html, body {
+  background: var(--bg);
+  overflow: hidden;
 }
+
 body {
-  font-family: 'Inter', sans-serif;
-  background: ${({ theme }) => theme.bg.primary};
-  color: ${({ theme }) => theme.text.primary};
+  font-family: var(--font-sans);
+  color: var(--text);
+  line-height: 1.5;
   text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
-
+  -webkit-font-smoothing: antialiased;
 }
 
-a{
-  color: ${({ theme }) => theme.text.primary};
+a {
+  color: inherit;
 }
 
-.main{
-    min-height: 100vh;
-    
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
 }
-.toast-container {
-  border-radius: 12px;
-  font-size: 14px;
-  font-weight: 600;
-}
-.container{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto;
-  
-}
-
-.nft-clipped{
-  clip-path: url(#hex);
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.oval-clipped{
-  clip-path: url(#oval);
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-   
 `;
 
 export default GlobalStyle;

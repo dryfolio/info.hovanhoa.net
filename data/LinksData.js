@@ -47,6 +47,8 @@ const webLinks = [
 
     {
         title: 'Home',
+        desc: "profile & writing",
+        tone: '#d8602f',
         url: 'https://hovanhoa.net',
         type: 'checkout',
         icon: '/home.svg',
@@ -54,6 +56,8 @@ const webLinks = [
     },
     {
         title: 'Blog',
+        desc: "notes & posts",
+        tone: '#b8734a',
         url: 'https://blog.hovanhoa.net',
         type: 'checkout',
         icon: '/blog.svg',
@@ -61,6 +65,8 @@ const webLinks = [
     },
         {
         title: 'Insight',
+        desc: "coding activity",
+        tone: '#4a6d92',
         url: 'https://insight.hovanhoa.net',
         type: 'checkout',
         icon: '/insight.svg',
@@ -68,6 +74,8 @@ const webLinks = [
     },
     {
         title: 'Gallery',
+        desc: "photography",
+        tone: '#7a4560',
         url: 'https://gallery.hovanhoa.net',
         type: 'checkout',
         icon: '/gallery.svg',
@@ -75,6 +83,8 @@ const webLinks = [
     },
     {
         title: 'Music',
+        desc: "what's on repeat",
+        tone: '#6b5ca5',
         url: 'https://music.hovanhoa.net',
         type: 'checkout',
         icon: '/music.svg',
@@ -82,6 +92,8 @@ const webLinks = [
     },
     {
         title: 'Book',
+        desc: "reading list",
+        tone: '#2f6a4c',
         url: 'https://book.hovanhoa.net',
         type: 'checkout',
         icon: '/doc.png',
@@ -89,6 +101,8 @@ const webLinks = [
     },
     {
         title: 'Status',
+        desc: "service uptime",
+        tone: '#5c6b73',
         url: 'https://status.hovanhoa.net',
         type: 'checkout',
         icon: '/status.svg',
