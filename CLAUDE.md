@@ -26,9 +26,11 @@ All customizable content lives in two files:
 
 ### Styling
 
-Styled-components v5 with SWC compiler plugin. Theme variables (colors, breakpoints, font sizes) live in `styles/theme.config.js` for light/dark modes. Global CSS variables are set in `styles/GlobalStyle.js`. SSR is handled via `ServerStyleSheet` in `pages/_document.js`.
+Styled-components v5 with SWC compiler plugin; SSR via `ServerStyleSheet` in `pages/_document.js`. The page uses the same editorial tokens as the rest of the hovanhoa.net family (`--bg`, `--surface`, `--text*`, `--accent*`, Geist + Libertinus Serif), defined in `styles/GlobalStyle.js` with a `html.dark` override.
 
-Dark mode uses `use-dark-mode` with system preference detection. Toggle between hex (NFT) and oval avatar via `bioData[0].nftAvatar` boolean — this switches between SVG clip-paths defined in `components/icons/index.js`.
+Dark mode follows the family-wide `theme` cookie (set on `.hovanhoa.net`): a boot script in `_document.js` adds `html.dark` before first paint, and the toggle in `WebLinks.js` writes the cookie.
+
+The page is a single screen with no scrolling: `WebLinks.js` sizes everything against the viewport height (`dvh`/`vh` clamps, plus `max-height` media queries that hide secondary text on short screens). Check new links at short heights (e.g. 375×667) before shipping. Family links take an optional `desc` and `tone` (icon colour) in `LinksData.js`; icons are painted with a CSS mask, so any single-colour SVG/PNG works.
 
 ### URL rewrites
 

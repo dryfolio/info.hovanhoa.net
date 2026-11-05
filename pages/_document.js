@@ -30,7 +30,7 @@ export default class MyDocument extends Document {
 
     render() {
         return (
-            <Html>
+            <Html lang="en">
                 <Head>
                     <link rel="preconnect" href="https://fonts.googleapis.com" />
                     <link
@@ -39,10 +39,15 @@ export default class MyDocument extends Document {
                         crossOrigin="true"
                     />
                     <link
-                        href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800&display=swap"
+                        href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Libertinus+Serif:wght@400;600&family=Noto+Serif:wght@400;600&display=swap"
                         rel="stylesheet"
                     />
-
+                    {/* apply the family-wide theme cookie before first paint */}
+                    <script
+                        dangerouslySetInnerHTML={{
+                            __html: `(function(){try{var m=document.cookie.match(/(?:^|; )theme=(dark|light)/);if(m&&m[1]==='dark')document.documentElement.classList.add('dark')}catch(e){}})()`,
+                        }}
+                    />
                 </Head>
                 <body>
 

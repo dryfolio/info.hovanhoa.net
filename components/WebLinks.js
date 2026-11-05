@@ -1,519 +1,415 @@
-// Weblinks Page Sections
-// created by @realvjy
-// date: 29 Jul, 2022
+// One-screen link page for the hovanhoa.net family. Content comes from
+// data/BioData.js and data/LinksData.js; everything is sized against the
+// viewport height so the page never needs to scroll.
 
-import Image from "next/image";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { Button, ButtonLink, Container, StyledLink } from "./ReusableStyles";
-import Link from "next/link";
-import { ChevronRightIcon, HexIcon, HomeIcon, TwitterIcon, NewUp, OvalIcon } from './icons';
 import allLinks from "../data/LinksData";
 import bioData from "../data/BioData";
 
+const bio = bioData[0];
+const social = allLinks.filter((l) => l.type === "social" && l.on);
+const family = allLinks.filter((l) => l.type === "checkout" && l.on);
 
+function hostOf(url) {
+  return url.replace(/^https?:\/\//, "").replace(/\/$/, "");
+}
 
-const Links = () => {
+function ThemeToggle() {
+  const [dark, setDark] = useState(false);
 
-  // all user info from bioData
-  const name = bioData[0].name;
-  const url = bioData[0].url;
-  const username = bioData[0].username;
-  const titleImg = bioData[0].titleImg;
-  const avatarImg = bioData[0].avatar;
-  const description = bioData[0].description;
-  const descShow = bioData[0].descShow;
-  const subdesc = bioData[0].subdesc;
-  const subdescShow = bioData[0].subdescShow;
-  const footerText = bioData[0].footerText;
-  const author = bioData[0].author;
-  const authorURL = bioData[0].authorURL;
-  const titleImage = "/title.svg";
+  useEffect(() => {
+    setDark(document.documentElement.classList.contains("dark"));
+  }, []);
 
-  // Check what class to use oval or hex for avatar
-  const avatarShape = bioData[0].nftAvatar ? `nft-clipped` : `oval-clipped`
-
-
-  // Description and subdescription goes here
-  const descriptionText = descShow ? description : `Write your own fall back text if description not in BioData.js or remove me/leave blank`
-  const subdescText = subdescShow ? subdesc : `Write your own if you want or just remove me/leave blank`
-
-
-  const newProduct = bioData[0].newProduct; // checking for newProduct flag true false
-  const newProductUrl = bioData[0].newProductUrl; // get product url if available
-
-
-
-  // Collect all links filter by type - social, project, nft and other etc=
-  // get data for social section
-  const social = allLinks.filter((el) => {
-    return el.type === "social" && el.on
-  });
-
-  // Get data for checkout section
-  const checkout = allLinks.filter((el) => {
-    return el.type === "checkout" && el.on
-  });
-
-  // Get data for nfts
-  const nfts = allLinks.filter((el) => {
-    return el.type === "nft" && el.on
-  });
-
-  // Get data for other section
-  const others = allLinks.filter((el) => {
-    return el.type === "other" && el.on
-  });
+  const toggle = () => {
+    const next = !dark;
+    setDark(next);
+    document.documentElement.classList.toggle("dark", next);
+    const v = next ? "dark" : "light";
+    try {
+      // shared across every *.hovanhoa.net subdomain
+      document.cookie = `theme=${v}; path=/; max-age=31536000; samesite=lax`;
+      document.cookie = `theme=${v}; path=/; max-age=31536000; samesite=lax; domain=.hovanhoa.net`;
+    } catch {}
+  };
 
   return (
-      <LinkWrapper>
-        <LinkContainer>
-          <TopPart>
-            <LinkHeader>
-              <Avatar>
-                <AvatarWrap>
-                  {/* Avatar svg  hex or oval if nftAvatar=true will convert to hex */}
-                  <HexIcon />
-                  <OvalIcon />
-                  <div className={`${avatarShape} avatar-border`}></div>
-                  <div className={`${avatarShape} avatar-fill`}></div>
-                  <img
-                      src={avatarImg}
-                      className={avatarShape}
-                  />
-                </AvatarWrap>
-              </Avatar>
-              <Title>
-                {/* Using titleimg flag to use image as title or text */}
-                {/* if your remove username from data it will not appear */}
-                {
-                  username ? <h3><a href={`${url}`}>{username}</a></h3> : ''
-                }
-              </Title>
-            </LinkHeader>
+    <Toggle
+      type="button"
+      onClick={toggle}
+      aria-label="Toggle dark mode"
+      aria-pressed={dark}
+    >
+      {dark ? (
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="12" r="4" />
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
+        </svg>
+      ) : (
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
+        </svg>
+      )}
+    </Toggle>
+  );
+}
 
-            {/* Bio Section */}
-            <LinkBio>
-              {description && <h1>{descriptionText} </h1>}
-              {subdesc && <h4>{subdescText}</h4>}
-            </LinkBio>
-            {/* End Bio Section */}
+export default function Links() {
+  return (
+    <Page>
+      <ThemeToggle />
+      <Card>
+        <Intro>
+          <Avatar src={bio.avatar} alt={bio.name} width={112} height={112} />
+          <div>
+            <Name>Hồ Văn Hòa</Name>
+            <Handle>
+              <a href={bio.url}>@{bio.username}</a> · {bio.description}
+            </Handle>
+          </div>
+          <Lead>
+            Backend systems, microservices and AI agents. Everything I make
+            lives somewhere below.
+          </Lead>
+          <Socials aria-label="Elsewhere">
+            {social.map((s) => (
+              <SocialLink
+                key={s.title}
+                href={s.url}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={s.title}
+                title={s.title}
+              >
+                <Glyph style={{ "--icon": `url(${s.icon})` }} />
+              </SocialLink>
+            ))}
+          </Socials>
+        </Intro>
 
-            {/* Weblinks started */}
-            <WebLinkWrap>
-              {/* Social Icon */}
-              <LinkSection className="social">
-                <div className="iconsonly">
-                  {
-                    social.map((i) => {
-                      return (
-                          <a href={i.url} key={i.title} target="_blank" rel="noreferrer">
-                            <LinkBox className="socialIcon">
-                              <img src={i.icon} style={{ filter: 'var(--img)' }} />
-                            </LinkBox>
-                          </a>
-                      )
-                    })
-                  }
-                </div>
-              </LinkSection>
-              {/* Social Icon */}
+        <Family>
+          <Label>The family</Label>
+          <Grid>
+            {family.map((f, i) => (
+              <Tile
+                key={f.title}
+                href={f.url}
+                $wide={i === 0}
+                style={{ "--tone": f.tone || "var(--text-2)" }}
+              >
+                <Chip>
+                  <Glyph style={{ "--icon": `url(${f.icon})` }} />
+                </Chip>
+                <TileText>
+                  <TileName>{f.title}</TileName>
+                  <TileDesc>{f.desc || hostOf(f.url)}</TileDesc>
+                </TileText>
+                <Arrow aria-hidden>↗</Arrow>
+              </Tile>
+            ))}
+          </Grid>
+        </Family>
+      </Card>
+      <Foot>
+        <a href={bio.url}>hovanhoa.net</a> · © {new Date().getFullYear()}
+      </Foot>
+    </Page>
+  );
+}
 
-              {/* checkout Section */}
-              {
-                checkout.length > 0 ?
-                    <LinkSection>
-                      <h3>{checkout[0].type}</h3>
-                      {
-                        checkout.map((i) => {
-                          return (
-                              <a href={i.url} key={i.title} target="_blank" rel="noreferrer">
-                                <LinkBox>
-                                  <LinkTitle><img src={i.icon} style={{ filter: 'var(--img)' }} /> {i.title}</LinkTitle> <NewUp />
-                                </LinkBox>
-                              </a>
-                          )
-                        })
-                      }
-                    </LinkSection> : ''
-              }
-              {/* End checkout Section */}
+// ---------- layout ----------
 
-              {/* NFT Section */}
-              {
-                nfts.length > 0 ?
-                    <LinkSection>
-                      <h3>{nfts[0].type}s</h3>
-                      {
-                        nfts.map((i) => {
-                          return (
-                              <a href={i.url} key={i.title} target="_blank" rel="noreferrer">
-                                <LinkBox>
-                                  <LinkTitle><img src={i.icon} style={{ filter: 'var(--img)' }} /> {i.title}</LinkTitle> <NewUp />
-                                </LinkBox>
-                              </a>
-                          )
-                        })
-                      }
-                    </LinkSection>
-                    : ''
-              }
-              {/* End NFT Section */}
-
-              {/* Other Section */}
-              {
-                others.length > 0 ?
-                    <LinkSection>
-                      <h3>{others[0].type}</h3>
-                      {/* BioData.js > newProduct == true */}
-                      {/* New Section will render once newProduct == true */}
-                      {(newProduct) ? <NewSection>
-                        <a href={newProductUrl} target="_blank" rel="noreferrer">
-                          <img
-                              src={'/newproduct.png'}
-                              className="newproduct"
-                          />
-                        </a>
-                      </NewSection> : ''
-                      }
-                      {/* End Biodata.js, You can move this section anywhere */}
-                      {
-                        others.map((i) => {
-                          return (
-                              <a href={i.url} key={i.title} target="_blank" rel="noreferrer">
-                                <LinkBox>
-                                  <LinkTitle><img src={i.icon} /> {i.title}</LinkTitle> <NewUp />
-                                </LinkBox>
-                              </a>
-                          )
-                        })
-                      }
-                    </LinkSection> : ''
-              }
-              {/* End Other Section */}
-
-            </WebLinkWrap>
-            {/* End Weblinks */}
-          </TopPart>
-          <BottomPart>
-            <LinkFoot>
-              <h4>{footerText} <a href={authorURL}>{author}</a></h4>
-            </LinkFoot>
-          </BottomPart>
-
-        </LinkContainer>
-      </LinkWrapper>
-
-  )
-};
-
-export default Links;
-
-const LinkWrapper = styled(Container)`
-`
-const LinkContainer = styled.div`
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    text-align: center;
-    padding: 24px;
-`
-
-const LinkHeader = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 60px;
-    margin-bottom: 12px;
-    @media screen and (max-width: ${({ theme }) => theme.deviceSize.tablet}) {
-       margin-top: 20px;
-    }
-`
-
-const Avatar = styled.div`
-    height: 90px;
-    width: 90px;
-    position: relative;
-    margin-bottom: 12px;
-`
-
-const AvatarWrap = styled.div`
-   height: 100%;
-   width: 100%;
-   filter: drop-shadow(0px 1px 2px var(--avatar-shadow));
-   img{
-    height: calc(100% - 6px);
-    width: calc(100% - 6px);
-   }
-   .avatar-border{
-        height: 100%;
-        width: 100%;
-        position: absolute;
-        background: ${({ theme }) => theme.bg.primary};
-   }
-   .avatar-fill{
-        height: calc(100% - 6px);
-        width: calc(100% - 6px);
-        position: absolute;
-        background: ${({ theme }) => theme.bg.primary};
-   }
-`
-
-const Title = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    h1{
-      font-size: 38px;
-      font-weight: 700;
-      
-      letter-spacing: -2px;
-      background: linear-gradient(90deg, #4AB1F1 5.71%, #566CEC 33.77%, #D749AF 61.82%, #FF7C51 91.21%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      @media screen and (max-width: ${({ theme }) => theme.deviceSize.tablet}) {
-        font-size: 32px;
-      }
-    }
-    h3{
-      margin-top:6px;
-      font-size: 18px;
-      font-weight: 500;
-      letter-spacing: -.7px;
-      color: ${({ theme }) => theme.text.secondary};
-      opacity: .5;
-      @media screen and (max-width: ${({ theme }) => theme.deviceSize.tablet}) {
-        font-size: 15px;
-        margin-top:2px;
-      }
-    }
-    
- 
-    .name{
-      margin-top: 8px;
-      @media screen and (max-width: ${({ theme }) => theme.deviceSize.tablet}) {
-        width: 140px;
-      }
-    }
-    .handle{
-      height: 32px;
-      margin-top: 6px;
-      margin-bottom: 6px;
-      @media screen and (max-width: ${({ theme }) => theme.deviceSize.tablet}) {
-        height: 26px;
-      }
-    }
-`
-
-const LinkBio = styled.div`
-    display: flex;
-    flex-direction: column;
-    h1{
-      font-size: 22px;
-      line-height: 30px;
-      font-weight: 500;
-      letter-spacing: -0.6px;
-      padding: 0 20px;
-      @media screen and (max-width: ${({ theme }) => theme.deviceSize.tablet}) {
-        font-size: 18px;
-        line-height: 26px;
-        padding: 0 8px;
-
-      }
-      vertical-align: middle;
-      span{
-        font-size: 12px;
-        vertical-align: bottom;
-        line-height: 30px;
-        color: ${({ theme }) => theme.text.secondary};
-        margin: 0 2px;
-        @media screen and (max-width: ${({ theme }) => theme.deviceSize.tablet}) {
-          font-size: 10px;
-          line-height: 20px;
-        }
-      }
-    }
-    h4{
-      font-size: 18px;
-      letter-spacing: -.5px;
-      margin: 10px 0;
-      color: ${({ theme }) => theme.text.secondary};
-      font-weight: 500;
-        @media screen and (max-width: ${({ theme }) => theme.deviceSize.tablet}) {
-          font-size: 15px;
-          padding: 0 20px;
-          line-height: 24px;
-        }
-      a{
-         font-weight: 700;
-         opacity: .7;
-         &:hover{
-          opacity: 1;
-         }
-      }
-    }
-
-`
-
-const TopPart = styled.div`
-    
-`
-
-
-
-const BottomPart = styled.div`
-    margin-bottom: 40px;
-    
-`
-const LinkFoot = styled.div`
-    h4{
-      color: ${({ theme }) => theme.text.secondary};
-      line-height: 32px;
-      letter-spacing: -.2px;
-      font-size: 16px;
-      font-weight: 500;
-      @media screen and (max-width: ${({ theme }) => theme.deviceSize.tablet}) {
-        font-size: 12px;
-      }
-      span{
-        font-size: 10px;
-        vertical-align: bottom;
-        line-height: 32px;
-        margin: 0 2px;
-        opacity: .6;
-        @media screen and (max-width: ${({ theme }) => theme.deviceSize.tablet}) {
-          font-size: 8px;
-        }
-      }
-    }
-`
-
-const WebLinkWrap = styled.div`
-    @media screen and (max-width: ${({ theme }) => theme.deviceSize.tablet}) {
-       padding: 0 12px;
-    }
-`
-
-
-const LinkSection = styled.div`
-    padding: 12px 0;
-    display: flex;
-    margin: 0 auto;
-    max-width: 400px;
-    flex-direction: column;
-    &.social{
-      max-width: max-content;
-      padding: 0;
-      margin-bottom: 18px;
-    }
-    .iconsonly{
-      display: flex;
-      justify-content: center;
-      @media screen and (max-width: ${({ theme }) => theme.deviceSize.tablet}) {
-        flex-wrap: wrap;
-      }
-    }
-    h3{
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 4px;
-      margin-bottom: 4px;
-      color: ${({ theme }) => theme.text.secondary};
-      @media screen and (max-width: ${({ theme }) => theme.deviceSize.tablet}) {
-        font-size: 11px;
-      }
-    }
-`
-
-const LinkBox = styled.div`
-    padding: 18px 20px;
-    border-radius: 12px;
-    margin: 8px 18px;
-    border: 1px solid ${({ theme }) => theme.bg.secondary};
-    flex-direction: row;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: 600;
-    letter-spacing: -.5px;
-    position: relative;
-    text-align: center;
-    
-    &::before{
-      content: "";
-      border-radius: 12px;
-      display: block;
-      position: absolute;
-      z-index: -1;
-      inset: -2px;
-      opacity: 0;
-      transform: scale(0.8);
-    }
-    &:hover{
-    transition: all 333ms ease 0s;
-    border-color: transparent;
-      &::before{
-        opacity: 1;
-        background: ${({ theme }) => theme.bg.hover};
-        transition: all 333ms ease 0s;
-        transform: scale(1);
-      }
-    }
-    .new-up{
-      transform: scale(.8);
-      opacity: .7;
-    }
-    
-    &.socialIcon{
-      padding: 16px;
-      border-radius: 50%;
-      border: none;
-      margin: 4px;
-      img{
-        height: 24px;
-      }
-     
-      @media screen and (max-width: ${({ theme }) => theme.deviceSize.tablet}) {
-        padding: 10px;
-        margin: 2px;
-        img{
-          height: 20px;
-        }
-      }
-    }
-    @media screen and (max-width: ${({ theme }) => theme.deviceSize.tablet}) {
-      padding: 12px 16px;
-      font-size: 16px;
-    }
-`
-const LinkTitle = styled.div`
+const Page = styled.div`
+  position: relative;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
   display: flex;
-  font-size: 18px;
+  flex-direction: column;
   align-items: center;
-    @media screen and (max-width: ${({ theme }) => theme.deviceSize.tablet}) {
-      font-size: 14px;
-    }
-    img{
-      height: 20px;
-      margin-right: 10px;
-    }
-`
+  justify-content: center;
+  gap: clamp(12px, 2.4vh, 28px);
+  padding: clamp(16px, 4vh, 48px) clamp(16px, 5vw, 56px);
+`;
 
-const NewSection = styled.div`
+const Card = styled.div`
+  width: 100%;
+  max-width: 1040px;
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  align-items: center;
+  gap: clamp(24px, 5vw, 72px);
+
+  @media (max-width: 860px) {
+    grid-template-columns: 1fr;
+    gap: clamp(14px, 2.6vh, 28px);
+    max-width: 520px;
+  }
+`;
+
+// ---------- intro ----------
+
+const Intro = styled.section`
+  display: flex;
+  flex-direction: column;
+  gap: clamp(10px, 2vh, 20px);
+
+  @media (max-width: 860px) {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    column-gap: 14px;
+    row-gap: clamp(8px, 1.6vh, 14px);
+  }
+`;
+
+const Avatar = styled.img`
+  width: clamp(72px, 12vh, 112px);
+  height: clamp(72px, 12vh, 112px);
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--border);
+  background: var(--surface);
+
+  @media (max-width: 860px) {
+    width: clamp(52px, 8vh, 72px);
+    height: clamp(52px, 8vh, 72px);
+  }
+`;
+
+const Name = styled.h1`
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(2.2rem, min(5.4vw, 7vh), 3.6rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--text);
+
+  @media (max-width: 860px) {
+    font-size: clamp(1.7rem, min(8vw, 5vh), 2.3rem);
+  }
+`;
+
+const Handle = styled.p`
+  margin-top: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--text-3);
+
+  a {
+    color: var(--text-2);
+  }
+  a:hover {
+    color: var(--accent-ink);
+  }
+
+  @media (max-width: 860px) {
+    margin-top: 4px;
+    font-size: 0.72rem;
+  }
+`;
+
+const Lead = styled.p`
+  max-width: 34ch;
+  font-size: clamp(0.95rem, 1.9vh, 1.08rem);
+  line-height: 1.6;
+  color: var(--text-2);
+
+  @media (max-width: 860px) {
+    grid-column: 1 / -1;
+    max-width: none;
+    font-size: 0.92rem;
+    line-height: 1.5;
+  }
+  @media (max-height: 640px) {
+    display: none;
+  }
+`;
+
+const Socials = styled.nav`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+
+  @media (max-width: 860px) {
+    grid-column: 1 / -1;
+  }
+`;
+
+const SocialLink = styled.a`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(34px, 5vh, 40px);
+  height: clamp(34px, 5vh, 40px);
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-2);
+  --glyph: 17px;
+
+  &:hover {
+    color: var(--text);
+    border-color: var(--border-2);
+    transform: translateY(-1px);
+  }
+`;
+
+// a link's icon file, painted in the current colour via a CSS mask
+const Glyph = styled.span`
+  display: block;
+  width: var(--glyph, 18px);
+  height: var(--glyph, 18px);
+  background: currentColor;
+  -webkit-mask: var(--icon) center / contain no-repeat;
+  mask: var(--icon) center / contain no-repeat;
+`;
+
+// ---------- family grid ----------
+
+const Family = styled.section`
+  min-width: 0;
+`;
+
+const Label = styled.p`
+  margin-bottom: clamp(8px, 1.4vh, 14px);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+`;
+
+const Grid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(6px, 1.2vh, 10px);
+`;
+
+const Tile = styled.a`
+  grid-column: ${({ $wide }) => ($wide ? "1 / -1" : "auto")};
   display: flex;
   align-items: center;
-  padding: 16px 20px;
-    img{
-      width: 100%;
-      border: 1px solid ${({ theme }) => theme.bg.secondary};
-      border-radius: 12px;
-      cursor: pointer;
-      &:hover{
-       transform: scale(1.01);
-      }
-    }
-`
+  gap: 12px;
+  min-width: 0;
+  height: clamp(48px, 8.2vh, 72px);
+  padding: 0 clamp(10px, 1.6vw, 16px);
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+
+  &:hover {
+    border-color: color-mix(in srgb, var(--tone) 45%, var(--border));
+    background: color-mix(in srgb, var(--tone) 6%, var(--surface));
+    transform: translateY(-1px);
+  }
+  &:focus-visible {
+    outline: 2px solid var(--text);
+    outline-offset: 2px;
+  }
+`;
+
+const Chip = styled.span`
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(30px, 4.6vh, 38px);
+  height: clamp(30px, 4.6vh, 38px);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--tone) 14%, var(--surface));
+  color: var(--tone);
+  --glyph: clamp(15px, 2.2vh, 18px);
+
+  ${Tile}:hover & {
+    transform: rotate(-6deg) scale(1.06);
+  }
+  html.dark & {
+    background: color-mix(in srgb, var(--tone) 24%, var(--surface));
+    color: color-mix(in srgb, var(--tone) 55%, #ffffff);
+  }
+`;
+
+const TileText = styled.span`
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+`;
+
+const TileName = styled.span`
+  font-size: clamp(0.88rem, 1.8vh, 0.98rem);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
+const TileDesc = styled.span`
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-3);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  @media (max-height: 700px) and (max-width: 860px) {
+    display: none;
+  }
+`;
+
+const Arrow = styled.span`
+  flex: none;
+  font-size: 0.85rem;
+  color: var(--text-3);
+
+  ${Tile}:hover & {
+    color: var(--tone);
+    transform: translate(1px, -1px);
+  }
+  @media (max-width: 420px) {
+    display: none;
+  }
+`;
+
+// ---------- chrome ----------
+
+const Toggle = styled.button`
+  position: absolute;
+  top: clamp(12px, 2.4vh, 24px);
+  right: clamp(12px, 3vw, 32px);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-2);
+  cursor: pointer;
+
+  &:hover {
+    background: var(--surface-2);
+    color: var(--text);
+  }
+`;
+
+const Foot = styled.p`
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-3);
+
+  a {
+    color: var(--text-2);
+  }
+  a:hover {
+    color: var(--accent-ink);
+  }
+  @media (max-height: 600px) {
+    display: none;
+  }
+`;
