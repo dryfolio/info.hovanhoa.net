@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Sitemap: https://info.hovanhoa.net/sitemap.xml
+Sitemap: https://hovanhoa.net/sitemap.xml
+Sitemap: https://insight.hovanhoa.net/sitemap.xml
+Sitemap: https://gallery.hovanhoa.net/sitemap.xml
+Sitemap: https://status.hovanhoa.net/sitemap.xml
+Host: https://info.hovanhoa.net
