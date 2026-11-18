@@ -101,7 +101,7 @@ export default function Links() {
               <Tile
                 key={f.title}
                 href={f.url}
-                $wide={i === 0}
+                $wide={i === 0 && family.length % 2 === 1}
                 style={{ "--tone": f.tone || "var(--text-2)" }}
               >
                 <Chip>

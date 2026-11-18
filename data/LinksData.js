@@ -100,6 +100,15 @@ const webLinks = [
         on: true
     },
     {
+        title: 'Movie',
+        desc: "watch log",
+        tone: '#a24a3c',
+        url: 'https://movie.hovanhoa.net',
+        type: 'checkout',
+        icon: '/movie.svg',
+        on: true
+    },
+    {
         title: 'Status',
         desc: "service uptime",
         tone: '#5c6b73',
